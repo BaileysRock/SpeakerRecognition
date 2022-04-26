@@ -55,7 +55,7 @@ def train(config,model,train_iter,dev_iter):
             break
     writer.close()
     end_time = time.time()
-    print("Train Time : {:.3f} min , The Best Acc in Dev : {} % , The Best Loss in Dev : {} % ".format(((float)((end_time-start_time))/60), dev_best_acc,dev_best_loss))
+    print("Train Time : {:.3f} min , The Best Acc in Dev : {} % , The Best Loss in Dev : {} % ".format(((float)((end_time-start_time))/60), dev_best_acc * 100, dev_best_loss))
 
 
 
