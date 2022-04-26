@@ -19,7 +19,9 @@ def train(config,model,train_iter,dev_iter):
     for epoch in range(config.epoch):
         print("Epoch [{}/{}]".format(epoch+1, config.epoch))
         for i, trains in enumerate(train_iter):
-            trains.to(config.device)
+            trains['wav1'] = trains['wav1'].to(config.device)
+            trains['wav2'] = trains['wav2'].to(config.device)
+            trains['label'] = trains['label'].to(config.device)
             outputs = model(trains)
             model.zero_grad()
             outputs.cpu()
@@ -64,7 +66,9 @@ def evaluate(model,config, evalDataLoader):
     wav2List = []
     loss = 0
     for i, evals in enumerate(evalDataLoader):
-        evals = evals.to(config.device)
+        evals['wav1'] = evals['wav1'].to(config.device)
+        evals['wav2'] = evals['wav2'].to(config.device)
+        evals['label'] = evals['label'].to(config.device)
         outputs = model(evals)
         outputs = outputs.cpu()
         loss += F.l1_loss(outputs[0], outputs[1], reduction='sum').item()
