@@ -23,8 +23,8 @@ class config(object):
         self.embedding_size = 30                                # 最后将语音嵌入的维度
         self.bidirectional = True                               # 是否双向
         # TODO:修改下面的配置
-        self.frame_num = 140                                    # 读取的梅尔波普矩阵的帧的个数
-        self.frame_len = 120                                    # 读取的梅尔波普矩阵的每一帧的长度
+        self.frame_num = 128                                    # 读取的梅尔波普矩阵的帧的个数
+        self.frame_len = 180                                    # 读取的梅尔波普矩阵的每一帧的长度
 
 
         # 训练设置
