@@ -19,14 +19,16 @@ def train(config,model,train_iter,dev_iter):
     for epoch in range(config.epoch):
         print("Epoch [{}/{}]".format(epoch+1, config.epoch))
         for i, trains in enumerate(train_iter):
+            trains.to(config.device)
             outputs = model(trains)
             model.zero_grad()
+            outputs.cpu()
             loss = F.l1_loss(outputs[0],outputs[1],reduction='sum')
             loss.backward()
             optimizer.step()
             # 输出当前效果
             if total_batch % 10 == 0:
-                dev_acc, dev_loss = evaluate(model, dev_iter)
+                dev_acc, dev_loss = evaluate(model,config, dev_iter)
                 if dev_loss < dev_best_loss:
                     dev_best_loss = dev_loss
                 if dev_acc > dev_best_acc:
@@ -57,15 +59,17 @@ def train(config,model,train_iter,dev_iter):
 
 
 
-def evaluate(model, evalDataLoader):
+def evaluate(model,config, evalDataLoader):
     wav1List = []
     wav2List = []
     loss = 0
     for i, evals in enumerate(evalDataLoader):
+        evals = evals.to(config.device)
         outputs = model(evals)
+        outputs = outputs.cpu()
         loss += F.l1_loss(outputs[0], outputs[1], reduction='sum').item()
-        wav1List.extend(data for data in outputs[0])
-        wav2List.extend(data for data in outputs[1])
+        wav1List.extend(data.cpu() for data in outputs[0])
+        wav2List.extend(data.cpu() for data in outputs[1])
     length = len(wav1List)
     matched = 0
     for i in range(length):

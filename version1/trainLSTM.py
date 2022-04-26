@@ -20,7 +20,7 @@ if __name__ == "__main__":
     evalDataLoader = DataLoader(dataset=evalDataSet,batch_size=myConfig.batch_size)
 
     # 初始化模型
-    model = trainModel(myConfig)
+    model = trainModel(myConfig).to(myConfig.device)
 
     train(myConfig,model,trainDataLoader,evalDataLoader)
 

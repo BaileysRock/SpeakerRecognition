@@ -1,1 +1,4 @@
-./version1/train
+.idea
+
+version1/__pycache__
+version1/train
