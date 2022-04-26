@@ -5,7 +5,7 @@
 
 ```shell
 # 训练LSTM系统
-python3 ../version1/trainLSTM.py
+python3 ./version1/trainLSTM.py
 ```
 
 
