@@ -35,7 +35,6 @@ class config(object):
 
         # dataloader部分
         self.batch_size = 128                                   # 每次取出的数据的量
-        self.padding_size = 32                                  # 每句话处理成的长度,长切短补
 
         # 模型保存路径
         self.save_model_path = "./train/models/" + self.model_name + ".ckpt"
