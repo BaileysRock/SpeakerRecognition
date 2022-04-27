@@ -2,8 +2,7 @@
 
 version1/__pycache__
 version1/train
+train
 
-/version1/__pycache__
 /venv
-/train
-/train-clean-100
+/dataset

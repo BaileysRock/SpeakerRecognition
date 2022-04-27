@@ -24,9 +24,9 @@ def get_mel_feature(infile, rate):
         rate,
         rate * 2.0833333 / librosa.get_duration(y=y, sr=rate),
     )
-    mm = librosa.feature.mfcc(yy, sr=rate, n_mfcc=128)
+    mm = librosa.feature.mfcc(yy, sr=rate, n_mfcc=1024)
 
-    return mm  # Expected: mm.shape == (128, 180)
+    return mm  # Expected: mm.shape == (1024, 180)
 
 
 if __name__ == "__main__":

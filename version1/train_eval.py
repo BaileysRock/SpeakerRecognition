@@ -41,7 +41,7 @@ def train(config,model,train_iter,dev_iter):
                     last_improve = total_batch
                 else:
                     improve = ''
-                print("Iter:{:4d} TrainLoss:{:.12f} DevLoss:{:.12f} DevAcc:{:.5f} Improve:{}".format(total_batch,loss.item(),dev_loss,dev_acc,improve))
+                print("Iter:{:4d} TrainLoss:{:.12f} DevLoss:{:.12f} DevAcc:{:.5f} Improve:{}".format(total_batch,loss.item(),dev_loss,dev_acc * 100,improve))
                 writer.add_scalar("loss/train", loss.item(), total_batch)
                 writer.add_scalar("loss/dev", dev_loss, total_batch)
                 writer.add_scalar("acc/dev", dev_acc, total_batch)
