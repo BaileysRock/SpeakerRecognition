@@ -60,3 +60,21 @@ class trainModel(nn.Module):
         output_wav1 = self.Fc(output_wav1[0][:,-1,:])   # 取最后时刻的隐藏状态 hidden state
         output_wav2 = self.Fc(output_wav2[0][:,-1,:])
         return (output_wav1,output_wav2)
+
+
+
+class testModel(nn.Module):
+    def __init__(self,config):
+        super(testModel,self).__init__()
+        self.LSTM = nn.LSTM(config.frame_len, config.hidden_size, num_layers=config.layer_nums,
+                            bidirectional=True, batch_first=True, dropout=config.dropout)
+        if config.bidirectional == True:
+            self.Fc = nn.Linear(2*config.hidden_size, config.embedding_size)
+        else:
+            self.Fc = nn.Linear(config.hidden_size, config.embedding_size)
+
+    def forward(self, x):
+        wav = torch.FloatTensor(x)
+        output_wav = self.LSTM(wav)        # output.shape [batch_size, seq_len, 2*hidden_size] = [batch_size, 32, 64]
+        output_wav = self.Fc(output_wav[0][:,-1,:])   # 取最后时刻的隐藏状态 hidden state
+        return output_wav
