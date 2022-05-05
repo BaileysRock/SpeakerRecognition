@@ -2,7 +2,7 @@ import os
 
 
 def gen_file_paths(human_id: str):
-    paths: str = []
+    paths: list[str] = []
 
     for _, dirs, _ in os.walk("./dataset/" + human_id + "/"):
         if len(dirs) == 0:

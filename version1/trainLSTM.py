@@ -1,13 +1,9 @@
-import numpy as np
-import os
-
 from LSTM import config
 from LSTM import trainModel
 from dataLoader import myDataSet
 from torch.utils.data.dataloader import DataLoader
 from train_eval import train
-from Mel import get_mel_feature
-from datasets import gen_file_paths
+from Mel import load_mel_feature
 
 if __name__ == "__main__":
     # 生成相关配置
@@ -19,32 +15,25 @@ if __name__ == "__main__":
     dataTrain = []
     dataEval = []
 
-    human_id_list = os.listdir("./dataset/")
-    for i in range(len(human_id_list)):
-        if int(human_id_list[i]) >= 100:
-            print("pass")
-            continue
-        path = gen_file_paths(human_id_list[i])
-        human_id_train = path[:-2]
-        human_id_eval = path[-2:]  # len(human_id_eval) == 2
-        for j in range(0, len(human_id_train) - 2, 2):
-            dataTrain.append(
-                (get_mel_feature(human_id_train[j], SAMPLE_RATE), get_mel_feature(human_id_train[j + 1], SAMPLE_RATE), i)
-            )
-        dataEval.append(
-            (get_mel_feature(human_id_eval[0], SAMPLE_RATE), get_mel_feature(human_id_eval[1], SAMPLE_RATE), -1)  # label doesn't matter
-        )
+    feature_label = load_mel_feature(human_count=100)
+
+    for i in range(0, len(feature_label) - 2, 2):
+        if feature_label[i][1] == feature_label[i + 1][1]:
+            if i % 10 != 0:
+                dataTrain.append(
+                    (feature_label[i][0], feature_label[i + 1][0], feature_label[i][1])
+                )
+            else:
+                dataEval.append(
+                    (feature_label[i][0], feature_label[i + 1][0], feature_label[i][1])
+                )
 
     trainDataSet = myDataSet(dataTrain)
     evalDataSet = myDataSet(dataEval)
     trainDataLoader = DataLoader(dataset=trainDataSet, batch_size=myConfig.batch_size, shuffle=True)
-    evalDataLoader = DataLoader(dataset=evalDataSet,batch_size=myConfig.batch_size)
+    evalDataLoader = DataLoader(dataset=evalDataSet, batch_size=myConfig.batch_size)
 
     # 初始化模型
     model = trainModel(myConfig).to(myConfig.device)
 
-    train(myConfig,model,trainDataLoader,evalDataLoader)
-
-
-
-
+    train(myConfig, model, trainDataLoader, evalDataLoader)
