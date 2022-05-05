@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from tensorboardX import SummaryWriter
 
 
-def train(config,model,train_iter,dev_iter):
+def train(config, model, train_iter, dev_iter):
     start_time = time.time()
     # 启用dropout
     model.train()
@@ -23,10 +23,18 @@ def train(config,model,train_iter,dev_iter):
             trains['wav2'] = trains['wav2'].to(config.device)
             trains['label'] = trains['label'].to(config.device)
             outputs = model(trains)
+            # print(outputs)
             model.zero_grad()
-            outputs[0].cpu()
-            outputs[1].cpu()
-            loss = F.l1_loss(outputs[0],outputs[1],reduction='sum')
+            loss = F.mse_loss(outputs[0], outputs[1])
+            lossList = []
+            len = outputs[0].shape[0]
+            for j in range(len):
+                for k in range(len):
+                    if k != j:
+                        lossList.append(F.triplet_margin_loss(outputs[j][0], outputs[j][1], outputs[k][0]))
+                        lossList.append(F.triplet_margin_loss(outputs[j][0], outputs[j][1], outputs[k][1]))
+            for lossItem in lossList:
+                loss += lossItem
             loss.backward()
             optimizer.step()
             # 输出当前效果
@@ -41,7 +49,7 @@ def train(config,model,train_iter,dev_iter):
                     last_improve = total_batch
                 else:
                     improve = ''
-                print("Iter:{:4d} TrainLoss:{:.12f} DevLoss:{:.12f} DevAcc:{:.5f} Improve:{}".format(total_batch,loss.item(),dev_loss,dev_acc * 100,improve))
+                print("Iter:{:4d} TrainLoss:{:.12f} DevLoss:{:.12f} DevAcc:{:.5f} Improve:{}".format(total_batch, loss.item(), dev_loss, dev_acc * 100, improve))
                 writer.add_scalar("loss/train", loss.item(), total_batch)
                 writer.add_scalar("loss/dev", dev_loss, total_batch)
                 writer.add_scalar("acc/dev", dev_acc, total_batch)
@@ -56,9 +64,6 @@ def train(config,model,train_iter,dev_iter):
     writer.close()
     end_time = time.time()
     print("Train Time : {:.3f} min , The Best Acc in Dev : {} % , The Best Loss in Dev : {} % ".format(((float)((end_time-start_time))/60), dev_best_acc * 100, dev_best_loss))
-
-
-
 
 
 
