@@ -19,6 +19,8 @@ def train(config, model, train_iter, dev_iter):
     for epoch in range(config.epoch):
         print("Epoch [{}/{}]".format(epoch+1, config.epoch))
         for i, trains in enumerate(train_iter):
+
+
             trains['wav1'] = trains['wav1'].to(config.device)
             trains['wav2'] = trains['wav2'].to(config.device)
             trains['label'] = trains['label'].to(config.device)
@@ -28,6 +30,9 @@ def train(config, model, train_iter, dev_iter):
             loss = F.mse_loss(outputs[0], outputs[1])
             lossList = []
             len = outputs[0].shape[0]
+
+
+
             for j in range(len):
                 for k in range(len):
                     if k != j:
@@ -76,9 +81,7 @@ def evaluate(model,config, evalDataLoader):
         evals['wav2'] = evals['wav2'].to(config.device)
         evals['label'] = evals['label'].to(config.device)
         outputs = model(evals)
-        outputs[0].cpu()
-        outputs[1].cpu()
-        loss += F.l1_loss(outputs[0], outputs[1], reduction='sum').item()
+        loss += F.mse_loss(outputs[0], outputs[1], reduction='sum').item()
         wav1List.extend(data.cpu() for data in outputs[0])
         wav2List.extend(data.cpu() for data in outputs[1])
     length = len(wav1List)
@@ -88,8 +91,8 @@ def evaluate(model,config, evalDataLoader):
         match = i
         matchLoss = float('inf')
         for j in range(length):
-            if F.l1_loss(wav1,wav2List[j]).item() < matchLoss:
-                matchLoss = F.l1_loss(wav1,wav2List[j]).item()
+            if F.mse_loss(wav1,wav2List[j]).item() < matchLoss:
+                matchLoss = F.mse_loss(wav1,wav2List[j]).item()
                 match = j
         if i == match:
             matched += 1

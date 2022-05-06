@@ -6,7 +6,7 @@ import torch.nn.functional as F
 from LSTM import config
 from LSTM import trainModel
 from LSTM import testModel
-from dataLoader import myDataSet
+from dataSet import myTrainDataSet
 from torch.utils.data.dataloader import DataLoader
 from train_eval import train
 

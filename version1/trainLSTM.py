@@ -1,6 +1,7 @@
 from LSTM import config
 from LSTM import trainModel
-from dataLoader import myDataSet
+from dataSet import myTrainDataSet
+from dataSet import myEvalDataSet
 from torch.utils.data.dataloader import DataLoader
 from train_eval import train
 from Mel import load_mel_feature
@@ -28,15 +29,18 @@ if __name__ == "__main__":
     #                 (feature_label[i][0], feature_label[i + 1][0], feature_label[i][1])
     #             )
 
-    dataTrain = [(np.random.random((128, 180)), np.random.random((128, 180)), 1),
-                 (np.random.random((128, 180)), np.random.random((128, 180)), 1)]
-    dataEval = [(np.random.random((128, 180)), np.random.random((128, 180)), 1),
-                (np.random.random((128, 180)), np.random.random((128, 180)), 1)]
 
-    trainDataSet = myDataSet(dataTrain)
-    evalDataSet = myDataSet(dataEval)
+    dataTrain = [(np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180))),
+                 (np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180))),
+                 (np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180))),]
+
+    dataEval = [(np.random.random((128, 180)), np.random.random((128, 180))),
+                (np.random.random((128, 180)), np.random.random((128, 180)))]
+
+    trainDataSet = myTrainDataSet(dataTrain)
+    evalDataSet = myEvalDataSet(dataEval)
     trainDataLoader = DataLoader(dataset=trainDataSet, batch_size=myConfig.batch_size, shuffle=True)
-    evalDataLoader = DataLoader(dataset=evalDataSet, batch_size=myConfig.batch_size)
+    evalDataLoader = DataLoader(dataset=evalDataSet, batch_size=myConfig.batch_size, shuffle=False)
 
     # 初始化模型
     model = trainModel(myConfig).to(myConfig.device)

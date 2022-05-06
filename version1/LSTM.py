@@ -20,12 +20,12 @@ class config(object):
         self.hidden_size = 32                                   # 隐藏层
         self.layer_nums = 2                                     # LSTM层数
         self.dropout = 0.3                                      # 随机丢弃
-        self.embedding_size = 30                                # 最后将语音嵌入的维度
+        self.embedding_size = 128                               # 最后将语音嵌入的维度
         self.bidirectional = True                               # 是否双向
         # TODO:修改下面的配置
         self.frame_num = 128                                    # 读取的梅尔波普矩阵的帧的个数
         self.frame_len = 180                                    # 读取的梅尔波普矩阵的每一帧的长度
-
+        self.sample_len = 30                                   # 每个人的音频数
 
         # 训练设置
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')   # 设备
