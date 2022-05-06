@@ -31,8 +31,8 @@ def train(config, model, train_iter, dev_iter):
             for j in range(len):
                 for k in range(len):
                     if k != j:
-                        lossList.append(F.triplet_margin_loss(outputs[j][0], outputs[j][1], outputs[k][0]))
-                        lossList.append(F.triplet_margin_loss(outputs[j][0], outputs[j][1], outputs[k][1]))
+                        lossList.append(F.triplet_margin_loss(outputs[0][j], outputs[1][j], outputs[0][k]))
+                        lossList.append(F.triplet_margin_loss(outputs[0][j], outputs[1][j], outputs[1][k]))
             for lossItem in lossList:
                 loss += lossItem
             loss.backward()
