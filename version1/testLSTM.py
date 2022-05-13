@@ -4,16 +4,15 @@ import os
 import torch
 import torch.nn.functional as F
 from LSTM import config
-from LSTM import trainModel
-from LSTM import testModel
-from dataSet import myTrainDataSet
+from LSTM import Model
+from dataSet import trainDataLoader
 from torch.utils.data.dataloader import DataLoader
 from train_eval import train
 
 myConfig = config()
 
 # 初始化模型
-model = testModel(myConfig).to(myConfig.device)
+model = Model(myConfig).to(myConfig.device)
 model.load_state_dict(torch.load(myConfig.save_model_path))
 
 

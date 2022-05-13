@@ -28,8 +28,8 @@ class evalDataSet(Dataset):
 
     def __getitem__(self, item):
         return {
-            'wav1': self.dataset[item][0],
-            'wav2': self.dataset[item][1]
+            'wav1': torch.FloatTensor(self.dataset[item][0]),
+            'wav2': torch.FloatTensor(self.dataset[item][1])
         }
 
 

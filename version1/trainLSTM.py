@@ -1,10 +1,10 @@
 from LSTM import config
-from LSTM import trainModel
+from LSTM import Model
 from dataSet import trainDataLoader
 from dataSet import evalDataSet
 from torch.utils.data.dataloader import DataLoader
 from train_eval import train
-from Mel import load_mel_feature
+# from Mel import load_mel_feature
 import numpy as np
 
 if __name__ == "__main__":
@@ -57,6 +57,9 @@ if __name__ == "__main__":
                  ]
 
     dataEval = [(np.random.random((128, 180)), np.random.random((128, 180))),
+                (np.random.random((128, 180)), np.random.random((128, 180))),
+                (np.random.random((128, 180)), np.random.random((128, 180))),
+                (np.random.random((128, 180)), np.random.random((128, 180))),
                 (np.random.random((128, 180)), np.random.random((128, 180)))]
 
     trainDataLoader = trainDataLoader(dataTrain, myConfig)
@@ -65,6 +68,6 @@ if __name__ == "__main__":
     evalDataLoader = DataLoader(dataset=evalDataSet, batch_size=myConfig.batch_size, shuffle=False)
 
     # 初始化模型
-    model = trainModel(myConfig).to(myConfig.device)
+    model = Model(myConfig).to(myConfig.device)
 
     train(myConfig, model, trainDataLoader, evalDataLoader)

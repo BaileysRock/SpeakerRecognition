@@ -22,12 +22,12 @@ class config(object):
         self.dropout = 0.3                                      # 随机丢弃
         self.embedding_size = 128                               # 最后将语音嵌入的维度
         self.bidirectional = True                               # 是否双向
-        # TODO:修改下面的配置
         self.frame_num = 128                                    # 读取的梅尔波普矩阵的帧的个数
         self.frame_len = 180                                    # 读取的梅尔波普矩阵的每一帧的长度
         # TODO：补充每个人音频数
         self.sample_len = 30                                    # 每个人的音频数
-        self.negative_num = 20                                  # 每个人对应的负样本
+        # TODO: 修改范围 200人的话 可以修改为5000
+        self.negative_num = 100                                  # 每个人对应的负样本
 
 
         # 训练设置
@@ -44,9 +44,9 @@ class config(object):
         self.log_path = "./train/logs/" + self.model_name + '/'
 
 
-class trainModel(nn.Module):
+class Model(nn.Module):
     def __init__(self,config):
-        super(trainModel,self).__init__()
+        super(Model,self).__init__()
         self.LSTM = nn.LSTM(config.frame_len, config.hidden_size, num_layers=config.layer_nums,
                             bidirectional=True, batch_first=True, dropout=config.dropout)
         if config.bidirectional == True:
@@ -56,28 +56,7 @@ class trainModel(nn.Module):
 
 
     def forward(self, x):
-        output_wav1 = self.LSTM(x[0])        # output.shape [batch_size, seq_len, 2*hidden_size] = [batch_size, 32, 64]
-        output_wav2 = self.LSTM(x[1])
-        output_negative = self.LSTM(x[2])
+        output_wav1 = self.LSTM(x)                   # output.shape [batch_size, seq_len, 2*hidden_size] = [batch_size, 32, 64]
         output_wav1 = self.Fc(output_wav1[0][:,-1,:])   # 取最后时刻的隐藏状态 hidden state
-        output_wav2 = self.Fc(output_wav2[0][:,-1,:])
-        output_negative = self.Fc(output_negative[0][:,-1,:])
-        return (output_wav1, output_wav2, output_negative)
+        return output_wav1
 
-
-
-class testModel(nn.Module):
-    def __init__(self,config):
-        super(testModel,self).__init__()
-        self.LSTM = nn.LSTM(config.frame_len, config.hidden_size, num_layers=config.layer_nums,
-                            bidirectional=True, batch_first=True, dropout=config.dropout)
-        if config.bidirectional == True:
-            self.Fc = nn.Linear(2*config.hidden_size, config.embedding_size)
-        else:
-            self.Fc = nn.Linear(config.hidden_size, config.embedding_size)
-
-    def forward(self, x):
-        wav = torch.FloatTensor(x)
-        output_wav = self.LSTM(wav)        # output.shape [batch_size, seq_len, 2*hidden_size] = [batch_size, 32, 64]
-        output_wav = self.Fc(output_wav[0][:,-1,:])   # 取最后时刻的隐藏状态 hidden state
-        return output_wav
