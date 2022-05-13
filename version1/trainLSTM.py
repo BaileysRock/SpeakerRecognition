@@ -1,11 +1,12 @@
 from LSTM import config
 from LSTM import trainModel
-from dataSet import myTrainDataSet
-from dataSet import myEvalDataSet
+from dataSet import trainDataLoader
+from dataSet import evalDataSet
 from torch.utils.data.dataloader import DataLoader
 from train_eval import train
 from Mel import load_mel_feature
 import numpy as np
+
 if __name__ == "__main__":
     # 生成相关配置
     myConfig = config()
@@ -29,17 +30,38 @@ if __name__ == "__main__":
     #                 (feature_label[i][0], feature_label[i + 1][0], feature_label[i][1])
     #             )
 
-
-    dataTrain = [(np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180))),
-                 (np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180))),
-                 (np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180))),]
+    dataTrain = [(np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180)),
+                  np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180)),
+                  np.random.random((128, 180)), np.random.random((128, 180))),
+                 (np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180)),
+                  np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180)),
+                  np.random.random((128, 180)), np.random.random((128, 180))),
+                 (np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180)),
+                  np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180)),
+                  np.random.random((128, 180)), np.random.random((128, 180))),
+                 (np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180)),
+                  np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180)),
+                  np.random.random((128, 180)), np.random.random((128, 180))),
+                 (np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180)),
+                  np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180)),
+                  np.random.random((128, 180)), np.random.random((128, 180))), (
+                 np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180)),
+                 np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180)),
+                 np.random.random((128, 180)), np.random.random((128, 180))),
+                 (np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180)),
+                  np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180)),
+                  np.random.random((128, 180)), np.random.random((128, 180))),
+                 (np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180)),
+                  np.random.random((128, 180)), np.random.random((128, 180)), np.random.random((128, 180)),
+                  np.random.random((128, 180)), np.random.random((128, 180))),
+                 ]
 
     dataEval = [(np.random.random((128, 180)), np.random.random((128, 180))),
                 (np.random.random((128, 180)), np.random.random((128, 180)))]
 
-    trainDataSet = myTrainDataSet(dataTrain)
-    evalDataSet = myEvalDataSet(dataEval)
-    trainDataLoader = DataLoader(dataset=trainDataSet, batch_size=myConfig.batch_size, shuffle=True)
+    trainDataLoader = trainDataLoader(dataTrain, myConfig)
+    evalDataSet = evalDataSet(dataEval)
+
     evalDataLoader = DataLoader(dataset=evalDataSet, batch_size=myConfig.batch_size, shuffle=False)
 
     # 初始化模型
