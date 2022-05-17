@@ -126,3 +126,7 @@ def load_mel_feature(human_count: int) -> list[tuple[np.array, int]]:
             feature_label.append((features, label))
 
     return feature_label
+
+
+if __name__ == '__main__':
+    dump_mel_feature(sr=44100)
