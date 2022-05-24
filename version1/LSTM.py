@@ -25,9 +25,9 @@ class config(object):
         self.frame_num = 128                                    # 读取的梅尔波普矩阵的帧的个数
         self.frame_len = 180                                    # 读取的梅尔波普矩阵的每一帧的长度
         # TODO：补充每个人音频数
-        self.sample_len = 30                                    # 每个人的音频数
+        self.sample_len = 15                                    # 每个人的音频数
         # TODO: 修改范围 200人的话 可以修改为5000
-        self.negative_num = 100                                  # 每个人对应的负样本
+        self.negative_num = 50                                   # 每个人对应的负样本，约为 ((sample_len * batch_size) ** 2) / 10
 
 
         # 训练设置

@@ -46,8 +46,8 @@ class trainDataLoader(object):
         # n_batch为打包的个数
         self.n_batches = len(self.dataset) // self.batch_size
         self.residue = False
-        if len(self.dataset) != self.batch_size*self.n_batches:
-            self.residue = True
+        # if len(self.dataset) != self.batch_size*self.n_batches:
+        #     self.residue = True
         self.index = 0
         self.device = config.device
         self.negative_num = config.negative_num
